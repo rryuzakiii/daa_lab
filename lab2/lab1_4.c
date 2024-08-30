@@ -1,30 +1,39 @@
-#include<stdio.h>
+#include <stdio.h>
+
+void EXCHANGE(int *p, int *q) {
+    int temp = *p;
+    *p = *q;
+    *q = temp;
+}
+
+void ROTATE_RIGHT(int *arr, int p2) {
+    if (p2 <= 1) return;
+    
+    EXCHANGE(&arr[0], &arr[p2 - 1]);
+
+    for (int i = p2 - 1; i > 1; i--) {
+        EXCHANGE(&arr[i], &arr[i - 1]);
+    }
+}
+
 int main() {
-    FILE *fp;
-    int n;
-    fp = fopen("file1.exe", "r");
-    if (fp == NULL) {
-        perror("Error opening file");
-        return EXIT_FAILURE;
-    }
-    
-    fscanf(fp, "%d", &n);
+    int arr[] = {11, 22, 33, 44, 55, 66, 77, 88, 99};
+    int size = sizeof(arr) / sizeof(arr[0]);
+    int p2 = 5;
 
-    int *arr = (int *)malloc(n * sizeof(int));
-    if (arr == NULL) {
-        perror("Memory allocation failed");
-        fclose(fp);
-        return EXIT_FAILURE;
+    printf("Before ROTATE: ");
+    for (int i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
     }
+    printf("\n");
 
-    for (int i = 0; i < n; i++) {
-        fscanf(fp, "%d", &arr[i]);
+    ROTATE_RIGHT(arr, p2);
+
+    printf("After ROTATE: ");
+    for (int i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
     }
+    printf("\n");
 
-    fclose(fp);
-    
-    findDuplicatesAndMostRepeated(arr, n);
-    free(arr);
-    
-    return EXIT_SUCCESS;
+    return 0;
 }

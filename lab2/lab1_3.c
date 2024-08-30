@@ -1,64 +1,76 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void findDuplicatesAndMostRepeated(int arr[], int n) {
-    int max_count = 0;
-    int most_repeated_element = arr[0];
-    int total_duplicates = 0;
+#define FILENAME "input.txt"
 
-    
-    int *freq = (int *)calloc(n, sizeof(int));
+int findMostRepeatingElement(int arr[], int n) {
+    int maxCount = 0;
+    int mostRepeatingElement = arr[0];
 
     for (int i = 0; i < n; i++) {
-        freq[arr[i]]++;
-    }
-    for (int i = 0; i < n; i++) {
-        if (freq[arr[i]] > 1) {
-            total_duplicates++;
+        int count = 0;
+        for (int j = 0; j < n; j++) {
+            if (arr[j] == arr[i]) {
+                count++;
+            }
         }
-        if (freq[arr[i]] > max_count) {
-            max_count = freq[arr[i]];
-            most_repeated_element = arr[i];
+        if (count > maxCount) {
+            maxCount = count;
+            mostRepeatingElement = arr[i];
         }
     }
-    printf("Total number of duplicate elements: %d\n", total_duplicates);
-    printf("Most repeating element in the array: %d\n", most_repeated_element);
-
-    free(freq);
+    return mostRepeatingElement;
 }
 
 int main() {
-    FILE *fp;
-    int n;
-    
-    fp = fopen("input.txt", "r");
-    if (fp == NULL) {
+    FILE *file = fopen(FILENAME, "r");
+    if (file == NULL) {
         perror("Error opening file");
-        return EXIT_FAILURE;
+        return 1;
     }
-    
-    fscanf(fp, "%d", &n);
-    
-    int *arr = (int *)malloc(n * sizeof(int));
+
+    int n;
+    fscanf(file, "%d", &n);
+
+    if (n <= 0) {
+        printf("Invalid array size.\n");
+        fclose(file);
+        return 1;
+    }
+
+    int *arr = malloc(n * sizeof(int));
     if (arr == NULL) {
         perror("Memory allocation failed");
-        fclose(fp);
-        return EXIT_FAILURE;
+        fclose(file);
+        return 1;
     }
-    
-    // Read the elements of the array
+
     for (int i = 0; i < n; i++) {
-        fscanf(fp, "%d", &arr[i]);
+        fscanf(file, "%d", &arr[i]);
     }
-    
-    // Close the file
-    fclose(fp);
-    
-    // Find duplicates and most repeating element
-    findDuplicatesAndMostRepeated(arr, n);
-    
-    // Free dynamically allocated memory
+    fclose(file);
+
+    printf("The content of the array: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+
+    int totalDuplicates = 0;
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (arr[i] == arr[j]) {
+                totalDuplicates++;
+                break;
+            }
+        }
+    }
+
+    int mostRepeatingElement = findMostRepeatingElement(arr, n);
+
+    printf("Total number of duplicate values = %d\n", totalDuplicates);
+    printf("The most repeating element in the array = %d\n", mostRepeatingElement);
+
     free(arr);
-    
-    return EXIT_SUCCESS;
+    return 0;
 }

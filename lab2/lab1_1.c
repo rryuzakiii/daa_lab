@@ -1,53 +1,61 @@
-#include < stdio.h >
-#include < stdlib.h >
+#include <stdio.h>
+#include <limits.h>
 
-void findSecondSmallestAndLargest(int arr[], int n) {
-    if (n < 2) {
-        printf("Array size must be at least 2 to find second smallest and second largest.\n");
-        return;
+#define FILENAME "input.txt"
+
+void findSecondSmallestAndLargest(int arr[], int n, int *secondSmallest, int *secondLargest) {
+    int smallest = INT_MAX, largest = INT_MIN;
+    *secondSmallest = INT_MAX;
+    *secondLargest = INT_MIN;
+
+    for (int i = 0; i < n; i++) {
+        if (arr[i] < smallest) {
+            *secondSmallest = smallest;
+            smallest = arr[i];
+        } else if (arr[i] > smallest && arr[i] < *secondSmallest) {
+            *secondSmallest = arr[i];
+        }
+
+        if (arr[i] > largest) {
+            *secondLargest = largest;
+            largest = arr[i];
+        } else if (arr[i] < largest && arr[i] > *secondLargest) {
+            *secondLargest = arr[i];
+        }
     }
-    qsort(arr, n, sizeof(int), compare);
-
-
-    int second_smallest = arr[1];
-
-    
-    int second_largest = arr[n - 2];
-
-    printf("Second smallest element: %d\n", second_smallest);
-    printf("Second largest element: %d\n", second_largest);
-}
-
-
-int compare(const void *a, const void *b) {
-    return (*(int *)a - *(int *)b);
 }
 
 int main() {
-    FILE *fp;
-    int n;
-    
-    fp = fopen("file1.exe", "r");
-    if (fp == NULL) {
+    FILE *file = fopen(FILENAME, "r");
+    if (file == NULL) {
         perror("Error opening file");
-        return EXIT_FAILURE;
+        return 1;
     }
-    
-    fscanf(fp, "%d", &n);
-    
-    int *arr = (int *)malloc(n * sizeof(int));
-    if (arr == NULL) {
-        perror("Memory allocation failed");
-        fclose(fp);
-        return EXIT_FAILURE;
+
+    int n;
+    fscanf(file, "%d", &n);
+
+    if (n < 2) {
+        printf("Array should have at least 2 elements.\n");
+        fclose(file);
+        return 1;
     }
-    
+
+    int arr[n];
     for (int i = 0; i < n; i++) {
-        fscanf(fp, "%d", &arr[i]);
+        fscanf(file, "%d", &arr[i]);
     }
-    
-    fclose(fp);
-    findSecondSmallestAndLargest(arr, n);
-    free(arr);
-    return EXIT_SUCCESS;
+    fclose(file);
+
+    int secondSmallest, secondLargest;
+    findSecondSmallestAndLargest(arr, n, &secondSmallest, &secondLargest);
+
+    if (secondSmallest == INT_MAX || secondLargest == INT_MIN) {
+        printf("Not enough distinct elements to determine second smallest and second largest.\n");
+    } else {
+        printf("Second smallest element: %d\n", secondSmallest);
+        printf("Second largest element: %d\n", secondLargest);
+    }
+
+    return 0;
 }
