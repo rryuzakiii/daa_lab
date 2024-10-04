@@ -39,7 +39,6 @@ int minDistance(int dist[], int sptSet[], int n) {
     return min_index;
 }
 
-
 void printPath(int parent[], int j) {
     if (parent[j] == -1) return;
     printPath(parent, parent[j]);
@@ -63,22 +62,22 @@ void printSolution(int dist[], int n, int parent[], int src) {
 }
 
 void dijkstra(int graph[100][100], int n, int src) {
-    int dist[100]; // The output array. dist[i] will hold the shortest distance from src to i
-    int sptSet[100]; // sptSet[i] will be 1 if vertex i is included in shortest path tree
-    int parent[100]; // Array to store the shortest path tree
-    
+    int dist[100];
+    int parent[100];
+    int sptSet[100]; 
+
     for (int i = 0; i < n; i++) {
         dist[i] = INF;
         sptSet[i] = 0;
         parent[i] = -1;
     }
-    
-    dist[src] = 0; // Distance of source vertex from itself is always 0
-    
+
+    dist[src] = 0;
+
     for (int count = 0; count < n - 1; count++) {
-        int u = minDistance(dist, sptSet, n); // Pick the minimum distance vertex from the set of vertices not yet processed
-        sptSet[u] = 1; // Mark the picked vertex as processed
-        
+        int u = minDistance(dist, sptSet, n);
+        sptSet[u] = 1;
+
         for (int v = 0; v < n; v++) {
             if (!sptSet[v] && graph[u][v] && dist[u] != INF && dist[u] + graph[u][v] < dist[v]) {
                 dist[v] = dist[u] + graph[u][v];
@@ -86,35 +85,35 @@ void dijkstra(int graph[100][100], int n, int src) {
             }
         }
     }
-    
+
     printSolution(dist, n, parent, src);
 }
 
 int main() {
     int graph[100][100];
     int n, src;
-    
-    FILE *file = fopen("inDiAdjMat.dat", "r");
+
+    FILE *file = fopen("inDiAdjMat1.dat", "r"); // Correct the filename
     if (file == NULL) {
         printf("Error opening file!\n");
         return -1;
     }
-    
+
     printf("Enter the Number of Vertices: ");
     scanf("%d", &n);
-    
+
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
             fscanf(file, "%d", &graph[i][j]);
         }
     }
     fclose(file);
-    
+
     printf("Enter the Source Vertex: ");
     scanf("%d", &src);
-    src--; // Decrease by 1 to convert to 0-based indexing
-    
+    src--; // Adjust for 0-based index
+
     dijkstra(graph, n, src);
-    
+
     return 0;
 }
