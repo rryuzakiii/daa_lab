@@ -93,7 +93,7 @@ int main() {
     int graph[100][100];
     int n, src;
 
-    FILE *file = fopen("inDiAdjMat1.dat", "r"); // Correct the filename
+    FILE *file = fopen("inDiAdjMat.dat", "r"); 
     if (file == NULL) {
         printf("Error opening file!\n");
         return -1;

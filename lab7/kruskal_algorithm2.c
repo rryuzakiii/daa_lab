@@ -42,7 +42,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_EDGES 1000
+#define MAX_EDGES 100
 
 typedef struct {
     int u, v, weight;
